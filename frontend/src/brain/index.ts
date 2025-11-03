@@ -7,12 +7,15 @@ const isDeployedToCustomApiPath = API_PREFIX_PATH !== API_PATH;
 
 const constructBaseUrl = (): string => {
   if (isDeployedToCustomApiPath) {
-    // Access via origin domain where webapp was hosted with given api prefix path
     const domain = window.location.origin || `https://${API_HOST}`;
     return `${domain}${API_PREFIX_PATH}`;
   }
 
-  // Access at configured proxy domain
+  // In dev we use Vite proxy; leave baseUrl empty so requests hit /routes and proxy to backend
+  if (!API_HOST && !API_PATH) {
+    return "";
+  }
+
   return `https://${API_HOST}${API_PATH}`;
 };
 
